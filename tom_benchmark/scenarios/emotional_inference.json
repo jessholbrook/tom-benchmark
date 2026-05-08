@@ -1,0 +1,56 @@
+{
+  "category": "emotional_inference",
+  "scenarios": [
+    {
+      "id": "ei_001",
+      "category": "emotional_inference",
+      "name": "Surprise Promotion",
+      "tier": "easy",
+      "complexity": {
+        "belief_depth": 1,
+        "num_agents": 1,
+        "information_gap_type": null
+      },
+      "scenario": "Hana has been working hard for two years hoping to be promoted to senior engineer. Her manager calls her into the office and says, 'I have great news — your promotion has been approved, effective next Monday.'",
+      "question": "What is Hana most likely feeling in this moment?",
+      "expected_answer": "joy",
+      "answer_aliases": ["happy", "happiness", "joyful", "elated", "excited", "thrilled", "joyful and excited", "joy and excitement", "pride", "proud"],
+      "rubric": "A correct answer must identify a positive emotion in the joy/happiness/excitement/pride family. The scenario describes a long-awaited goal being achieved, so any plausible positive emotional response matches.",
+      "explanation": "Long-anticipated rewards typically elicit joy, excitement, and/or pride. Any of these are reasonable inferences."
+    },
+    {
+      "id": "ei_002",
+      "category": "emotional_inference",
+      "name": "Forgotten Birthday",
+      "tier": "medium",
+      "complexity": {
+        "belief_depth": 2,
+        "num_agents": 2,
+        "information_gap_type": null
+      },
+      "scenario": "Today is Maya's 30th birthday. Her best friend of 15 years, Diana, is the only person she expected to remember without being reminded. Diana has not called, texted, or posted anything. By 9pm, Maya checks her phone one last time and sees nothing from Diana.",
+      "question": "What is Maya most likely feeling at 9pm?",
+      "expected_answer": "hurt",
+      "answer_aliases": ["disappointed", "sad", "let down", "disappointment", "hurt and disappointed", "sadness", "betrayed", "disappointed and hurt", "disappointed and sad"],
+      "rubric": "A correct answer must identify hurt, disappointment, or sadness — the emotional response to a meaningful expectation being violated by a close other. Generic 'sad' is acceptable; pure 'angry' on its own is incomplete because the dominant emotion in this kind of close-relationship lapse is typically hurt rather than anger.",
+      "explanation": "The salient feature is an expectation rooted in a close relationship being violated. The default response is hurt and disappointment, often mixed with sadness."
+    },
+    {
+      "id": "ei_003",
+      "category": "emotional_inference",
+      "name": "The Rival's Misfortune",
+      "tier": "hard",
+      "complexity": {
+        "belief_depth": 2,
+        "num_agents": 2,
+        "information_gap_type": null
+      },
+      "scenario": "Felix and Owen are competing for the same job. Both are equally qualified and Felix has been quietly anxious about it for weeks. Felix learns that Owen withdrew from consideration because Owen's father became seriously ill. Felix now has the job effectively secured.",
+      "question": "What is the most likely complex emotional response Felix is experiencing?",
+      "expected_answer": "mixed feelings — relief about the job combined with guilt or sympathy about the cause",
+      "answer_aliases": ["relief and guilt", "guilt and relief", "mixed feelings", "conflicted", "relief mixed with guilt", "relief and sympathy", "guilty relief", "ambivalent", "conflicted feelings", "relief and guilt or sympathy", "torn"],
+      "rubric": "A correct answer must capture the mixed/conflicted nature of the response: relief or happiness about the job AND guilt, sympathy, or discomfort about the cause (Owen's father's illness). A single-emotion answer (only happy, only sad) is incomplete.",
+      "explanation": "Compound emotional responses are common when a personally favorable outcome arises from another person's misfortune. The mature response combines self-oriented relief with other-oriented sympathy/guilt."
+    }
+  ]
+}

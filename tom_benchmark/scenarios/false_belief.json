@@ -1,0 +1,56 @@
+{
+  "category": "false_belief",
+  "scenarios": [
+    {
+      "id": "fb_001",
+      "category": "false_belief",
+      "name": "Sally-Anne Classic",
+      "tier": "easy",
+      "complexity": {
+        "belief_depth": 1,
+        "num_agents": 2,
+        "information_gap_type": "absence"
+      },
+      "scenario": "Sally puts her marble in the basket and leaves the room. While Sally is away, Anne moves the marble from the basket to the box. Sally returns to the room.",
+      "question": "Where will Sally look for her marble first?",
+      "expected_answer": "basket",
+      "answer_aliases": ["the basket", "in the basket", "her basket"],
+      "rubric": "A correct answer must indicate Sally will look in the basket. Sally did not see Anne move the marble, so her belief about its location is unchanged from when she placed it.",
+      "explanation": "Sally did not witness the move; her belief about the marble's location is still the basket, even though the marble is actually in the box."
+    },
+    {
+      "id": "fb_002",
+      "category": "false_belief",
+      "name": "The Misplaced Laptop",
+      "tier": "medium",
+      "complexity": {
+        "belief_depth": 1,
+        "num_agents": 3,
+        "information_gap_type": "absence"
+      },
+      "scenario": "Marcus closes his laptop and leaves it on the kitchen counter before going to a long lunch. While he is out, his roommate Lucy needs the counter for cooking, so she moves the laptop to the desk in the living room. A neighbor stops by and tells Lucy he saw Marcus get on a bus heading downtown. Marcus is actually walking back from a nearby cafe and has no idea any of this happened.",
+      "question": "When Marcus gets home and wants to use his laptop, where will he look for it first?",
+      "expected_answer": "kitchen counter",
+      "answer_aliases": ["the kitchen counter", "the counter", "on the counter", "in the kitchen"],
+      "rubric": "A correct answer must indicate Marcus will look on the kitchen counter. The neighbor's report and Lucy's move are irrelevant to Marcus's belief — he was not present and was not told.",
+      "explanation": "Marcus's last interaction with the laptop was placing it on the kitchen counter. He has no information that would update that belief."
+    },
+    {
+      "id": "fb_003",
+      "category": "false_belief",
+      "name": "The Switched Office",
+      "tier": "hard",
+      "complexity": {
+        "belief_depth": 2,
+        "num_agents": 3,
+        "information_gap_type": "false_information"
+      },
+      "scenario": "Anna is looking for Ben. She knows Ben usually works in office 4B on Tuesdays. Today, however, the building manager has temporarily relocated everyone on the 4th floor to the 6th floor due to an electrical issue — but the building manager only sent the email to people whose offices were affected. Anna's office is on the 3rd floor and she did not get the email. Ben got the email and is now working from office 6B. Anna heads up to find Ben.",
+      "question": "Which office will Anna go to first to find Ben?",
+      "expected_answer": "4B",
+      "answer_aliases": ["office 4b", "4b", "the 4th floor", "his usual office"],
+      "rubric": "A correct answer must indicate Anna will go to office 4B (or the 4th floor). Anna did not receive the relocation email, so her belief about Ben's location is still his usual Tuesday office.",
+      "explanation": "Anna's belief depends on the information she has, not the actual current state. She did not get the email, so she still believes Ben is in 4B."
+    }
+  ]
+}

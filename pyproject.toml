@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tom-benchmark"
+version = "1.0.0"
+description = "A Theory of Mind benchmark suite for evaluating LLMs on social cognition tasks."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+authors = [{ name = "Jess Holbrook", email = "jess.holbrook@gmail.com" }]
+keywords = ["theory-of-mind", "benchmark", "llm", "evaluation", "nlp"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "click>=8.1",
+    "pydantic>=2.5",
+    "python-dotenv>=1.0",
+    "anthropic>=0.40",
+    "openai>=1.40",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "build>=1.0",
+]
+dashboard = [
+    "streamlit>=1.30",
+    "plotly>=5.18",
+    "pandas>=2.1",
+]
+
+[project.scripts]
+tom-benchmark = "tom_benchmark.cli:cli"
+
+[project.urls]
+Homepage = "https://github.com/jessholbrook/tom-benchmark"
+Repository = "https://github.com/jessholbrook/tom-benchmark"
+Issues = "https://github.com/jessholbrook/tom-benchmark/issues"
+
+[tool.setuptools.packages.find]
+include = ["tom_benchmark*"]
+
+[tool.setuptools.package-data]
+tom_benchmark = ["scenarios/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+addopts = "-ra"

@@ -1,0 +1,56 @@
+{
+  "category": "higher_order_beliefs",
+  "scenarios": [
+    {
+      "id": "hob_001",
+      "category": "higher_order_beliefs",
+      "name": "Does Alice Know Bob Knows?",
+      "tier": "medium",
+      "complexity": {
+        "belief_depth": 2,
+        "num_agents": 2,
+        "information_gap_type": "absence"
+      },
+      "scenario": "Alice secretly tells Bob that the office is moving to a new building next month. She says, 'Don't tell anyone yet.' Bob replies, 'Got it, I won't.' Bob does not tell anyone.",
+      "question": "Does Alice know that Bob knows the office is moving?",
+      "expected_answer": "yes",
+      "answer_aliases": ["yes she does", "yes alice knows", "yes alice knows that bob knows", "yes she knows"],
+      "rubric": "A correct answer must indicate yes — Alice told Bob directly and Bob acknowledged. This is a second-order belief: Alice has knowledge about Bob's knowledge state.",
+      "explanation": "Telling someone something and getting an acknowledgement establishes mutual awareness. Alice knows the information, and Alice knows Bob now also knows it."
+    },
+    {
+      "id": "hob_002",
+      "category": "higher_order_beliefs",
+      "name": "The Forgotten Mention",
+      "tier": "hard",
+      "complexity": {
+        "belief_depth": 3,
+        "num_agents": 3,
+        "information_gap_type": "absence"
+      },
+      "scenario": "Yara mentioned to Theo, in passing months ago, that she is allergic to peanuts. Theo has long since forgotten this. Recently, Theo's roommate Ravi mentioned to Theo that someone on the team is peanut-allergic, but didn't say who. Yara is unaware that Theo and Ravi have ever spoken about allergies.",
+      "question": "Does Yara believe that Theo knows she specifically is allergic to peanuts?",
+      "expected_answer": "yes",
+      "answer_aliases": ["yes she does", "yes yara believes that", "yes she believes theo knows"],
+      "rubric": "A correct answer must indicate yes. From Yara's perspective, she told Theo directly months ago. Yara has no reason to believe Theo forgot, so she still believes Theo knows. (The fact that Theo actually forgot is irrelevant to Yara's belief.)",
+      "explanation": "This is a third-order question. Yara's belief about Theo's knowledge depends on what Yara has reason to believe — and she told him directly. The fact that Theo's actual knowledge state has decayed does not retroactively change Yara's belief."
+    },
+    {
+      "id": "hob_003",
+      "category": "higher_order_beliefs",
+      "name": "The Surprise Within a Surprise",
+      "tier": "expert",
+      "complexity": {
+        "belief_depth": 4,
+        "num_agents": 3,
+        "information_gap_type": "deception"
+      },
+      "scenario": "Sam is planning a surprise party for Jordan. Sam tells Mira about the party in confidence. Unbeknownst to Sam, Jordan has already accidentally seen Sam's planning notes and knows about the party — but Jordan is pretending to be unaware so Sam isn't disappointed. Mira does not know that Jordan has seen the notes.",
+      "question": "Does Sam believe that Mira believes that Jordan does not know about the party?",
+      "expected_answer": "yes",
+      "answer_aliases": ["yes sam believes that", "yes he does", "yes sam does"],
+      "rubric": "A correct answer must indicate yes. From Sam's perspective: Sam thinks the party is still a surprise. Sam told Mira this was a surprise. Therefore Sam thinks Mira also believes Jordan is in the dark. The fact that Jordan actually knows is invisible to both Sam and Mira.",
+      "explanation": "Fourth-order belief: Sam's belief about Mira's belief about Jordan's knowledge. The puzzle's depth comes from disentangling actual reality (Jordan knows) from each agent's belief state (Sam and Mira both still think Jordan doesn't know)."
+    }
+  ]
+}

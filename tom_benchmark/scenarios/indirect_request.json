@@ -1,0 +1,56 @@
+{
+  "category": "indirect_request",
+  "scenarios": [
+    {
+      "id": "ir_001",
+      "category": "indirect_request",
+      "name": "It's Cold In Here",
+      "tier": "easy",
+      "complexity": {
+        "belief_depth": 1,
+        "num_agents": 2,
+        "information_gap_type": null
+      },
+      "scenario": "Priya and her partner Devon are sitting in the living room. The window has been open for an hour. Priya wraps a blanket tighter around herself and says to Devon, 'Wow, it's really cold in here.'",
+      "question": "What is Priya most likely asking Devon to do?",
+      "expected_answer": "close the window",
+      "answer_aliases": ["shut the window", "close it", "shut it", "turn up the heat", "raise the heat"],
+      "rubric": "A correct answer must identify that Priya is making an indirect request — most plausibly to close the open window (or otherwise warm the room, e.g. by turning up the heat or bringing a blanket). A purely literal interpretation (a comment about the temperature) is incorrect.",
+      "explanation": "The salient context — an open window and Priya's body language — makes the utterance an indirect request to remediate the cold, not a neutral observation."
+    },
+    {
+      "id": "ir_002",
+      "category": "indirect_request",
+      "name": "Time Check",
+      "tier": "easy",
+      "complexity": {
+        "belief_depth": 1,
+        "num_agents": 2,
+        "information_gap_type": null
+      },
+      "scenario": "Tariq is rushing to a meeting. He stops a colleague in the hallway and asks, 'Do you happen to know what time it is?'",
+      "question": "What response does Tariq actually want?",
+      "expected_answer": "the current time",
+      "answer_aliases": ["tell him the time", "tell him what time it is", "the time", "what time it is", "say the time"],
+      "rubric": "A correct answer must indicate that Tariq wants to be told the current time. A literal yes/no answer to whether the colleague knows is incorrect.",
+      "explanation": "'Do you know what time it is?' is conventionally an indirect request for the time itself, not a question about the colleague's knowledge state."
+    },
+    {
+      "id": "ir_003",
+      "category": "indirect_request",
+      "name": "These Breadsticks Are Amazing",
+      "tier": "medium",
+      "complexity": {
+        "belief_depth": 2,
+        "num_agents": 2,
+        "information_gap_type": null
+      },
+      "scenario": "At a dinner party, the host has been refilling everyone's plates throughout the evening. A guest, Maya, has finished the breadsticks on her plate. As the host walks past, Maya catches her eye, gestures at her empty plate, and says with a warm smile, 'These breadsticks are absolutely amazing.'",
+      "question": "What is Maya most likely communicating to the host?",
+      "expected_answer": "she would like more breadsticks",
+      "answer_aliases": ["bring more breadsticks", "wants more breadsticks", "asking for more breadsticks", "more breadsticks", "refill her plate", "wants seconds"],
+      "rubric": "A correct answer must identify that Maya is hinting that she would like more breadsticks (combining a compliment with the empty-plate gesture and direct eye contact with the host). A purely literal compliment interpretation is incorrect.",
+      "explanation": "The compliment, the gesture toward an empty plate, and the timing (catching the host's eye) jointly signal a polite indirect request for more, framed as praise."
+    }
+  ]
+}

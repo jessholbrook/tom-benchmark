@@ -1,0 +1,56 @@
+{
+  "category": "knowledge_attr",
+  "scenarios": [
+    {
+      "id": "ka_001",
+      "category": "knowledge_attr",
+      "name": "Lottery Announcement",
+      "tier": "easy",
+      "complexity": {
+        "belief_depth": 1,
+        "num_agents": 1,
+        "information_gap_type": "absence"
+      },
+      "scenario": "Tom is in the basement doing laundry. The radio in the kitchen, two floors above, is on at low volume. The radio announces the winning lottery number for the day. Tom does not hear it. Nobody else is home.",
+      "question": "Does Tom know the winning lottery number?",
+      "expected_answer": "no",
+      "answer_aliases": ["he does not know", "he doesn't know", "no he does not", "tom does not know"],
+      "rubric": "A correct answer must indicate that Tom does not know the winning number. Information broadcast in a place where Tom cannot hear it does not enter his knowledge state.",
+      "explanation": "Knowledge requires perception or communication of the information. The broadcast occurred but Tom had no perceptual access to it."
+    },
+    {
+      "id": "ka_002",
+      "category": "knowledge_attr",
+      "name": "The Selective Group Chat",
+      "tier": "medium",
+      "complexity": {
+        "belief_depth": 2,
+        "num_agents": 4,
+        "information_gap_type": "absence"
+      },
+      "scenario": "Aisha, Ben, Carla, and Dimitri all work on the same team. Aisha discovers a critical bug at 9pm. She sends a message about it in a side chat that includes Ben and Carla, but not Dimitri. Ben reads the message immediately and replies. Carla has her phone on do-not-disturb and does not see the message until the next morning. Dimitri is not in the side chat at all.",
+      "question": "At 10pm that same night, who knows about the bug?",
+      "expected_answer": "Aisha and Ben",
+      "answer_aliases": ["aisha and ben", "ben and aisha", "just aisha and ben", "only aisha and ben"],
+      "rubric": "A correct answer must identify Aisha and Ben (and only those two) as knowing about the bug at 10pm. Carla has not yet read the message; Dimitri was never sent it.",
+      "explanation": "Aisha discovered the bug. Ben read and replied. Carla has the message but hasn't seen it. Dimitri never received it. Knowledge requires not just delivery but reception."
+    },
+    {
+      "id": "ka_003",
+      "category": "knowledge_attr",
+      "name": "Inferred Contents",
+      "tier": "hard",
+      "complexity": {
+        "belief_depth": 1,
+        "num_agents": 2,
+        "information_gap_type": "absence"
+      },
+      "scenario": "Sara comes home and sees a sealed Amazon box on the porch addressed to her partner. The shipping label is fully covered by an opaque wrap, and the box is unmarked. Sara has no information about what was ordered. She brings it inside, leaves it sealed, and goes to make dinner. The box actually contains a birthday gift card that her partner ordered for a friend.",
+      "question": "Does Sara know that there is a gift card inside the box?",
+      "expected_answer": "no",
+      "answer_aliases": ["she does not know", "no she does not", "sara does not know"],
+      "rubric": "A correct answer must indicate Sara does not know the box contains a gift card. She perceived the box but had no information that would let her infer or know its contents.",
+      "explanation": "Sara is aware of the box but has no perceptual or testimonial access to its contents. Awareness of a container does not constitute knowledge of what is inside it."
+    }
+  ]
+}

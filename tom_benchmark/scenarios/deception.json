@@ -1,0 +1,56 @@
+{
+  "category": "deception",
+  "scenarios": [
+    {
+      "id": "dec_001",
+      "category": "deception",
+      "name": "The Blank Notebook",
+      "tier": "easy",
+      "complexity": {
+        "belief_depth": 1,
+        "num_agents": 2,
+        "information_gap_type": "deception"
+      },
+      "scenario": "Liam tells his teacher, 'I finished my homework last night.' The teacher asks to see it. Liam opens his notebook and the page where the homework should be is completely blank.",
+      "question": "Was Liam being truthful?",
+      "expected_answer": "no",
+      "answer_aliases": ["he was lying", "he was not truthful", "he was being deceptive", "no he was lying", "he lied"],
+      "rubric": "A correct answer must indicate Liam was not being truthful (he lied). The blank page directly contradicts his claim.",
+      "explanation": "A blank page where the assignment should be is direct evidence Liam did not finish; his prior statement was therefore a lie."
+    },
+    {
+      "id": "dec_002",
+      "category": "deception",
+      "name": "The Used Car Sale",
+      "tier": "medium",
+      "complexity": {
+        "belief_depth": 2,
+        "num_agents": 2,
+        "information_gap_type": "deception"
+      },
+      "scenario": "A salesperson is showing Priya a used car. He says, 'This car has had only one owner, and it's never been in a major accident.' He does not mention that the car has been in three minor collisions and that the previous owner was a rideshare driver who put 200,000 miles on it in two years. Priya does not ask about the mileage or rideshare history.",
+      "question": "Is the salesperson being deceptive, even though every individual statement he made is technically true?",
+      "expected_answer": "yes",
+      "answer_aliases": ["yes he is being deceptive", "he is being deceptive", "deceptive by omission", "yes by omission", "yes deceptive"],
+      "rubric": "A correct answer must identify that the salesperson is being deceptive — specifically through selective omission of materially relevant facts (heavy mileage, rideshare use, multiple minor collisions). Technically truthful statements can still constitute deception.",
+      "explanation": "Deception is not limited to false statements. Strategically omitting information you know would change the listener's decision is a form of deception (deception by omission)."
+    },
+    {
+      "id": "dec_003",
+      "category": "deception",
+      "name": "The Surprise Party Cover",
+      "tier": "medium",
+      "complexity": {
+        "belief_depth": 2,
+        "num_agents": 3,
+        "information_gap_type": "deception"
+      },
+      "scenario": "Jordan's friends are throwing him a surprise birthday party at a friend's house at 7pm. To keep him from suspecting, his partner Riley tells him at 5pm, 'I made a reservation at the Italian place on 5th — let's just have a quiet dinner, just the two of us.' There is no reservation. The plan is to drive past the restaurant on the way to the surprise party.",
+      "question": "Is Riley being deceptive in a morally objectionable way?",
+      "expected_answer": "no",
+      "answer_aliases": ["no it is benign", "no it is benevolent", "not morally objectionable", "no benign deception", "no it is for a good reason"],
+      "rubric": "A correct answer must distinguish that while Riley is technically lying, the deception is benevolent / pro-social (preserving a surprise) and does not harm Jordan's interests. Calling it 'deception' alone is incomplete; the answer should identify that it is not morally objectionable.",
+      "explanation": "Deception can be evaluated on intent and effect. Riley's lie is in service of a positive surprise Jordan presumably wants — a paradigmatic case of socially-sanctioned, benevolent deception."
+    }
+  ]
+}
