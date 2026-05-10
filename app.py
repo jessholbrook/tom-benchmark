@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 
 from tom_benchmark.adapters import MODEL_REGISTRY
 from tom_benchmark.judge import JudgeConfig
-from tom_benchmark.loader import CATEGORY_FILES, load_scenarios
+from tom_benchmark.loader import CATEGORY_FILES, category_counts, load_scenarios
 from tom_benchmark.models import BenchmarkRun
 from tom_benchmark.runner import BenchmarkRunner
 
@@ -41,20 +41,111 @@ def _load_runs() -> list[tuple[Path, BenchmarkRun]]:
     return runs
 
 
+def _apply_session_keys() -> None:
+    """Push the session-state API keys into os.environ for adapters to pick up."""
+    for env_key in ("ANTHROPIC_API_KEY", "OPENAI_API_KEY"):
+        val = st.session_state.get(f"_{env_key}")
+        if val:
+            os.environ[env_key] = val
+
+
 def _render_sidebar() -> None:
-    st.sidebar.title("ToM Benchmark")
-    st.sidebar.subheader("API key status")
-    anthropic_ok = bool(os.getenv("ANTHROPIC_API_KEY"))
-    openai_ok = bool(os.getenv("OPENAI_API_KEY"))
+    st.sidebar.title("🧠 ToM Benchmark")
     st.sidebar.markdown(
-        f"- Anthropic: {'OK' if anthropic_ok else 'missing'}\n"
-        f"- OpenAI: {'OK' if openai_ok else 'missing'}"
+        "Evaluate LLMs on **Theory of Mind** tasks across 6 cognitive categories."
     )
+
+    st.sidebar.divider()
+    st.sidebar.subheader("API keys (session-only)")
+    st.sidebar.caption(
+        "Keys are kept in your browser session and used only to call the model "
+        "providers. They are not stored or logged."
+    )
+
+    # Anthropic
+    current_anthropic = os.getenv("ANTHROPIC_API_KEY", "")
+    anthropic_input = st.sidebar.text_input(
+        "ANTHROPIC_API_KEY",
+        value=st.session_state.get("_ANTHROPIC_API_KEY", ""),
+        type="password",
+        placeholder="sk-ant-..." if not current_anthropic else "(loaded from env)",
+        help="Optional. Required to run Claude models.",
+        key="_ANTHROPIC_API_KEY",
+    )
+    if anthropic_input:
+        os.environ["ANTHROPIC_API_KEY"] = anthropic_input
+
+    # OpenAI
+    current_openai = os.getenv("OPENAI_API_KEY", "")
+    openai_input = st.sidebar.text_input(
+        "OPENAI_API_KEY",
+        value=st.session_state.get("_OPENAI_API_KEY", ""),
+        type="password",
+        placeholder="sk-..." if not current_openai else "(loaded from env)",
+        help="Optional. Required to run GPT models.",
+        key="_OPENAI_API_KEY",
+    )
+    if openai_input:
+        os.environ["OPENAI_API_KEY"] = openai_input
+
+    st.sidebar.subheader("Status")
+    st.sidebar.markdown(
+        f"- Anthropic: {'✅ ready' if os.getenv('ANTHROPIC_API_KEY') else '⚪ not set'}\n"
+        f"- OpenAI: {'✅ ready' if os.getenv('OPENAI_API_KEY') else '⚪ not set'}"
+    )
+
+    st.sidebar.divider()
+    st.sidebar.subheader("Dataset")
+    counts = category_counts()
+    total = sum(counts.values())
+    st.sidebar.markdown(f"**{total} scenarios** across {len(counts)} categories")
+    for cat, n in counts.items():
+        st.sidebar.markdown(f"- `{cat}`: {n}")
+
+
+def render_browse_tab() -> None:
+    st.header("Browse Scenarios")
+    st.caption(
+        "The dataset is hand-crafted. Filter, read, and inspect any scenario "
+        "without running a model."
+    )
+
+    col1, col2 = st.columns(2)
+    with col1:
+        cat_filter = st.selectbox("Category", options=["(all)"] + list(CATEGORY_FILES.keys()))
+    with col2:
+        tier_filter = st.selectbox("Tier", options=["(all)", "easy", "medium", "hard", "expert"])
+
+    cat = None if cat_filter == "(all)" else cat_filter
+    tier = None if tier_filter == "(all)" else tier_filter
+    scenarios = load_scenarios(category=cat, tier=tier)
+
+    st.markdown(f"**{len(scenarios)} scenarios** match.")
+
+    for s in scenarios:
+        with st.expander(f"`{s.id}` · {s.name} · {s.category}/{s.tier}"):
+            st.markdown(f"**Scenario.** {s.scenario}")
+            st.markdown(f"**Question.** {s.question}")
+            st.markdown(f"**Expected answer.** `{s.expected_answer}`")
+            if s.answer_aliases:
+                aliases = ", ".join(f"`{a}`" for a in s.answer_aliases)
+                st.markdown(f"**Aliases.** {aliases}")
+            st.markdown(f"**Rubric.** {s.rubric}")
+            st.markdown(f"**Why this is the answer.** {s.explanation}")
+            st.json(json.loads(s.model_dump_json()), expanded=False)
 
 
 def render_run_tab() -> None:
     st.header("Run Benchmark")
     available_models = list(MODEL_REGISTRY.keys())
+
+    no_keys = not (os.getenv("ANTHROPIC_API_KEY") or os.getenv("OPENAI_API_KEY"))
+    if no_keys:
+        st.warning(
+            "No API keys detected. Paste an Anthropic or OpenAI key in the sidebar "
+            "to enable benchmark runs. Keys live only in your session."
+        )
+
     models = st.multiselect(
         "Models to evaluate",
         options=available_models,
@@ -76,7 +167,8 @@ def render_run_tab() -> None:
     judge_always = st.checkbox("Run judge on every response", value=False)
     structured = st.checkbox("Enable Layer 3 (structured JSON output)", value=False)
 
-    if st.button("Run", type="primary", disabled=not models):
+    can_run = bool(models) and not no_keys
+    if st.button("Run", type="primary", disabled=not can_run):
         scenarios = []
         if categories:
             for cat in categories:
@@ -99,22 +191,32 @@ def render_run_tab() -> None:
             st.subheader(f"Running {model}")
             progress_bar = st.progress(0.0)
             status_box = st.empty()
-            runner = BenchmarkRunner(model_name=model, judge=judge_cfg, structured=structured)
+            try:
+                runner = BenchmarkRunner(model_name=model, judge=judge_cfg, structured=structured)
+            except Exception as e:
+                st.error(f"Could not start runner for {model}: {e}")
+                continue
 
             def _progress(idx: int, total: int, scen) -> None:
                 progress_bar.progress(idx / total)
                 status_box.write(f"[{idx}/{total}] {scen.id} — {scen.category}/{scen.tier}")
 
-            run = runner.run(scenarios, progress=_progress)
+            try:
+                run = runner.run(scenarios, progress=_progress)
+            except Exception as e:
+                st.error(f"Run failed for {model}: {e}")
+                continue
+
             saved_path = _save_run(run)
             st.success(
-                f"{model}: accuracy {run.accuracy:.2%} ({run.correct_count}/{run.total}) — saved to {saved_path}"
+                f"{model}: accuracy {run.accuracy:.2%} "
+                f"({run.correct_count}/{run.total}) — saved to {saved_path.name}"
             )
             with st.expander("Per-scenario results"):
                 for r in run.results:
-                    label = "OK" if r.correct else ("?" if r.correct is None else "X")
+                    label = "✅" if r.correct else ("❓" if r.correct is None else "❌")
                     st.write(
-                        f"**{label}** `{r.scenario_id}` ({r.category}/{r.tier}) — {r.response[:120]}"
+                        f"{label} `{r.scenario_id}` ({r.category}/{r.tier}) — {r.response[:160]}"
                     )
 
 
@@ -130,7 +232,10 @@ def render_results_tab() -> None:
     if not selected:
         return
     _, run = options[selected]
-    st.metric("Accuracy", f"{run.accuracy:.2%}", help=f"{run.correct_count}/{run.total}")
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Accuracy", f"{run.accuracy:.2%}")
+    c2.metric("Correct", f"{run.correct_count} / {run.total}")
+    c3.metric("Model", run.model_name)
 
     by_cat = run.accuracy_by_category()
     if by_cat:
@@ -187,14 +292,25 @@ def render_compare_tab() -> None:
 
 
 def main() -> None:
-    st.set_page_config(page_title="ToM Benchmark", layout="wide")
+    st.set_page_config(page_title="🧠 ToM Benchmark", layout="wide", page_icon="🧠")
     _render_sidebar()
-    tab1, tab2, tab3 = st.tabs(["Run Benchmark", "Results", "Compare Models"])
-    with tab1:
+
+    st.title("🧠 Theory of Mind Benchmark")
+    st.caption(
+        "A benchmark for evaluating LLMs on social cognition tasks. "
+        "Browse scenarios, run models against them, and compare results."
+    )
+
+    tab_browse, tab_run, tab_results, tab_compare = st.tabs(
+        ["Browse Scenarios", "Run Benchmark", "Results", "Compare Models"]
+    )
+    with tab_browse:
+        render_browse_tab()
+    with tab_run:
         render_run_tab()
-    with tab2:
+    with tab_results:
         render_results_tab()
-    with tab3:
+    with tab_compare:
         render_compare_tab()
 
 

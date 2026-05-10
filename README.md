@@ -20,6 +20,7 @@ The suite is organized around **6 cognitive categories** scored through a **3-la
 - [Architecture](#architecture)
 - [CLI Reference](#cli-reference)
 - [Streamlit Dashboard](#streamlit-dashboard)
+- [Deploying the Web App](#deploying-the-web-app)
 - [API Keys](#api-keys)
 - [Scenario Schema](#scenario-schema)
 - [Export Formats](#export-formats)
@@ -348,7 +349,45 @@ The dashboard includes:
 - **Results** tab: browse historical runs, view accuracy by category with Plotly bar charts, drill into individual scenario responses
 - **Compare Models** tab: side-by-side comparison of multiple runs with grouped bar charts by category
 
-The sidebar shows API key status (Anthropic/OpenAI) and provides model and category selection.
+The sidebar shows API key status (Anthropic/OpenAI) and provides model and category selection. The **Browse Scenarios** tab works without any API keys, so the app stays useful as a read-only dataset viewer for visitors who don't bring credentials.
+
+---
+
+## Deploying the Web App
+
+`app.py` is designed to deploy as-is to any Streamlit-friendly host. The sidebar accepts session-only API keys, so you can ship a public demo without exposing your own credentials — visitors paste their own keys to run benchmarks, and anyone can use the Browse Scenarios tab without keys.
+
+### Streamlit Community Cloud (recommended, free)
+
+1. Push this repo to GitHub (already done if you cloned this from a fork).
+2. Go to [share.streamlit.io](https://share.streamlit.io) and sign in with GitHub.
+3. Click **New app** → pick `tom-benchmark` → set the main file to `app.py` → deploy.
+
+Streamlit Cloud reads `requirements.txt` automatically. No secrets are required for a BYO-key demo.
+
+### Hugging Face Spaces (free)
+
+Create a new Space, choose the **Docker** SDK, point it at this repo. The included `Dockerfile` + `app.py` are all you need. Optionally add `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` as Space secrets if you want a key pre-loaded.
+
+### Fly.io (paid; container, very flexible)
+
+```bash
+brew install flyctl
+fly auth signup        # or `fly auth login`
+fly launch --copy-config --no-deploy --name <your-app-name>
+fly deploy
+```
+
+The included `Dockerfile` and `fly.toml` configure a small shared-CPU instance that scales to zero when idle.
+
+### Anywhere with Docker (Render, Railway, Cloud Run, your own box)
+
+```bash
+docker build -t tom-benchmark .
+docker run -p 8501:8501 tom-benchmark
+```
+
+The container honors `$PORT`, so it works on any platform that injects one.
 
 ---
 
