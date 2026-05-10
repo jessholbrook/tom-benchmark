@@ -6,6 +6,10 @@ The suite is organized around **6 cognitive categories** scored through a **3-la
 
 > **Status:** This repository ships with a **seed dataset** of hand-crafted scenarios (currently 3 per category — 18 total). The schema, scoring pipeline, CLI, dashboard, and tests are all production-ready; the dataset is designed to grow toward a full 150-scenario benchmark over time. See [Categories & Scenarios](#categories--scenarios) for the current count.
 
+> **Live demo:** _Coming soon at `https://tom-benchmark.streamlit.app`_ — once deployed, paste your own Anthropic or OpenAI key in the sidebar to run benchmarks, or browse the dataset without any keys.
+
+![Browse Scenarios tab](docs/screenshots/01-browse.png)
+
 ---
 
 ## Table of Contents
@@ -343,13 +347,33 @@ pip install -e ".[dashboard]"
 streamlit run app.py
 ```
 
-The dashboard includes:
+The dashboard has four tabs:
 
-- **Run Benchmark** tab: select models and categories, run benchmarks with live progress, view per-scenario results
-- **Results** tab: browse historical runs, view accuracy by category with Plotly bar charts, drill into individual scenario responses
-- **Compare Models** tab: side-by-side comparison of multiple runs with grouped bar charts by category
+#### Browse Scenarios
 
-The sidebar shows API key status (Anthropic/OpenAI) and provides model and category selection. The **Browse Scenarios** tab works without any API keys, so the app stays useful as a read-only dataset viewer for visitors who don't bring credentials.
+Filter and inspect every scenario in the dataset — scenario text, question, expected answer, aliases, rubric, and the reasoning behind the answer. Works without any API keys.
+
+![Browse Scenarios tab](docs/screenshots/01-browse.png)
+
+#### Run Benchmark
+
+Pick the model(s) to evaluate, optionally narrow by category or tier, and choose whether to enable Layer 2 (LLM-as-Judge) and Layer 3 (structured output). Progress streams live as scenarios run.
+
+![Run Benchmark tab](docs/screenshots/02-run.png)
+
+#### Results
+
+Browse past runs, see overall accuracy, per-category accuracy as a Plotly chart, and drill into individual scenario responses.
+
+![Results tab](docs/screenshots/03-results.png)
+
+#### Compare Models
+
+Side-by-side accuracy by category across multiple saved runs. Useful for tracking regressions across model versions.
+
+![Compare Models tab](docs/screenshots/04-compare.png)
+
+The sidebar shows API key status (Anthropic/OpenAI), accepts session-only key inputs, and shows the live dataset counts. The Browse Scenarios tab works without any API keys, so the app stays useful as a read-only dataset viewer for visitors who don't bring credentials.
 
 ---
 

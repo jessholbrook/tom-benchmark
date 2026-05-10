@@ -55,4 +55,4 @@ results.json
 tom_benchmark_hf/
 
 # Tooling-local
-.claude/settings.local.json
+.claude/
